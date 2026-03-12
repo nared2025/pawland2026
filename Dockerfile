@@ -13,14 +13,25 @@ WORKDIR /var/www
 COPY . .
 RUN composer install --no-dev --optimize-autoloader
 
-# Stage 1: Node build (ถ้าอยาก build assets แบบ production)
+# Stage 1: Node build (optional, production assets)
 FROM php AS node-build
 RUN apk add --no-cache nodejs npm
+WORKDIR /var/www
+COPY . .
 RUN npm install && npm run build
 
-# Stage 2: nginx
-FROM nginx:alpine
-COPY --from=php /var/www /var/www
+# Stage 2: Final image with Nginx + PHP-FPM
+FROM php:8.5-fpm-alpine
+RUN apk add --no-cache nginx bash
+
+# copy Laravel + built assets
+COPY --from=node-build /var/www /var/www
+
+# Nginx config
 COPY default.conf /etc/nginx/conf.d/default.conf
+
+# expose port
 EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+
+# Start both PHP-FPM and Nginx
+CMD ["sh", "-c", "php-fpm & nginx -g 'daemon off;'"]
