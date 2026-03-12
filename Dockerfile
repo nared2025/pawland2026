@@ -1,46 +1,26 @@
-# Stage 0: Base image PHP 8.5 + FPM Alpine
-FROM php:8.5-fpm-alpine
+# Stage 0: PHP 8.5 FPM
+FROM php:8.5-fpm-alpine AS php
 
-# ติดตั้ง system dependencies
 RUN apk add --no-cache \
-    bash \
-    git \
-    curl \
-    zip \
-    unzip \
-    libzip-dev \
-    oniguruma-dev \
-    nodejs npm \
-    postgresql-dev \
-    icu-dev \
-    zlib-dev \
-    libxml2-dev \
-    make \
-    g++ \
-    autoconf \
-    bash \
-    shadow
+    bash git curl zip unzip libzip-dev oniguruma-dev \
+    postgresql-dev icu-dev zlib-dev libxml2-dev make g++ autoconf shadow
 
-# ติดตั้ง PHP extensions ที่ Laravel ต้องใช้
 RUN docker-php-ext-install pdo pdo_pgsql mbstring zip intl xml
 
-# ติดตั้ง Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# ตั้ง working directory
 WORKDIR /var/www
-
-# copy source code เข้า container
 COPY . .
-
-# ติดตั้ง Laravel dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# ติดตั้ง Node dependencies และ build front-end assets
+# Stage 1: Node build (ถ้าอยาก build assets แบบ production)
+FROM php AS node-build
+RUN apk add --no-cache nodejs npm
 RUN npm install && npm run build
 
-# Expose port สำหรับ Laravel
-EXPOSE 8000
-
-# คำสั่งรัน Laravel
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+# Stage 2: nginx
+FROM nginx:alpine
+COPY --from=php /var/www /var/www
+COPY default.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
