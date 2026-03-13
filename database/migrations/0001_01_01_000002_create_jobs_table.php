@@ -12,13 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('jobs', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id'); // id auto-increment
             $table->string('queue')->index();
             $table->longText('payload');
-            $table->unsignedTinyInteger('attempts');
-            $table->unsignedInteger('reserved_at')->nullable();
-            $table->unsignedInteger('available_at');
-            $table->unsignedInteger('created_at');
+            $table->unsignedSmallInteger('attempts'); // TinyInteger -> SmallInteger
+            $table->integer('reserved_at')->nullable(); // Postgres ไม่มี unsigned, ปล่อยเป็น integer
+            $table->integer('available_at');
+            $table->integer('created_at');
         });
 
         Schema::create('job_batches', function (Blueprint $table) {
@@ -27,16 +27,16 @@ return new class extends Migration
             $table->integer('total_jobs');
             $table->integer('pending_jobs');
             $table->integer('failed_jobs');
-            $table->longText('failed_job_ids');
-            $table->mediumText('options')->nullable();
+            $table->longText('failed_job_ids'); // mediumText -> longText
+            $table->longText('options')->nullable(); // mediumText -> longText
             $table->integer('cancelled_at')->nullable();
             $table->integer('created_at');
             $table->integer('finished_at')->nullable();
         });
 
         Schema::create('failed_jobs', function (Blueprint $table) {
-            $table->id();
-            $table->string('uuid')->unique();
+            $table->bigIncrements('id');
+            $table->uuid('uuid')->unique(); // Postgres รองรับ uuid type
             $table->text('connection');
             $table->text('queue');
             $table->longText('payload');
