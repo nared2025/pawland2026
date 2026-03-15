@@ -41,6 +41,11 @@ class PhotoController extends Controller
             'Cat_condo' => 'คอนโดแมว',
             'Cat_bag' => 'กระเป๋าแมว',
             'Toys_cat' => 'ของเล่นแมว',
+            'Cat_bowl'      => 'ชามข้าวแมว',
+            'Cat_bed'       => 'ที่นอนแมว',
+            'Cat_fountain'  => 'น้ำพุแมว',
+            'Cat_litterbox' => 'กระบะทรายแมว',
+            'Cat_clipper'   => 'ที่ตัดเล็บแมว',
         ];
     }
 
