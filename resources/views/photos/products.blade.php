@@ -109,6 +109,11 @@
                 'Cat_condo' => 'คอนโดแมว',
                 'Cat_bag' => 'กระเป๋าแมว',
                 'Toys_cat' => 'ของเล่นแมว',
+                'Cat_bowl' => 'ชามข้าวแมว',
+                'Cat_bed' => 'ที่นอนแมว',
+                'Cat_fountain' => 'น้ำพุแมว',
+                'Cat_litterbox' => 'กระบะทรายแมว',
+                'Cat_clipper' => 'ที่ตัดเล็บแมว',
             ];
         @endphp
         <!-- Search Bar -->
@@ -127,11 +132,8 @@
 
         <div class="products-grid">
             @foreach ($products as $item)
-                <div class="product-card"
-                    data-id="{{ $item->id }}"
-                    data-category="{{ $item->type }}"
-                    data-name="{{ $item->name }}"
-                    data-price="{{ $item->price }}">
+                <div class="product-card" data-id="{{ $item->id }}" data-category="{{ $item->type }}"
+                    data-name="{{ $item->name }}" data-price="{{ $item->price }}">
                     <button class="wishlist-btn" onclick="toggleWishlist({{ $item->id }}, this)">🤍</button>
 
                     <img src="{{ asset($item->image_url) }}" alt="{{ $item->name }}">
@@ -208,7 +210,8 @@
             // --- ค้นหาชื่อสินค้าแบบ real-time ---
             searchInput.addEventListener('input', () => {
                 const keyword = searchInput.value.toLowerCase();
-                const currentCategory = document.querySelector('.tab-btn.active').dataset.category.toLowerCase();
+                const currentCategory = document.querySelector('.tab-btn.active').dataset.category
+                    .toLowerCase();
 
                 products.forEach(prod => {
                     const name = prod.dataset.name.toLowerCase();
@@ -280,7 +283,10 @@
                 if (existing) {
                     existing.quantity += 1;
                 } else {
-                    cart.push({ ...data, quantity: 1 });
+                    cart.push({
+                        ...data,
+                        quantity: 1
+                    });
                 }
                 renderCart();
             }
@@ -341,11 +347,11 @@
             }
 
             // เผยฟังก์ชันให้ onclick ใช้งาน
-            window.addToCart = function (id, btn) {
+            window.addToCart = function(id, btn) {
                 addToCartInternal(Number(id));
             };
 
-            window.toggleWishlist = function (id, btn) {
+            window.toggleWishlist = function(id, btn) {
                 toggleWishlistInternal(Number(id), btn);
             };
 
