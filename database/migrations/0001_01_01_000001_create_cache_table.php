@@ -11,17 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-    Schema::create('cache', function (Blueprint $table) {
-    $table->string('key')->primary();
-    $table->longText('value'); // mediumText -> longText
-    $table->integer('expiration')->index(); // Postgres ไม่มี unsigned
-});
+        Schema::create('cache', function (Blueprint $table) {
+            $table->string('key')->primary();
+            $table->longText('value'); // mediumText -> longText
+            $table->integer('expiration')->index(); // Postgres ไม่มี unsigned
+        });
 
-Schema::create('cache_locks', function (Blueprint $table) {
-    $table->string('key')->primary();
-    $table->string('owner');
-    $table->integer('expiration')->index(); // Postgres ไม่มี unsigned
-});
+        Schema::create('cache_locks', function (Blueprint $table) {
+            $table->string('key')->primary();
+            $table->string('owner');
+            $table->integer('expiration')->index(); // Postgres ไม่มี unsigned
+        });
     }
 
     /**
