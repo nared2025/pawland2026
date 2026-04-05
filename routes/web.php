@@ -3,6 +3,7 @@
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PhotoController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Route;
 
 Route::resource('photos',PhotoController::class);
@@ -17,6 +18,7 @@ Route::get('/dashboard', function () {
     return redirect()->route('photos.home');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::get('/sitemap', [SitemapController::class, 'sitemap'])->name('sitemap');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

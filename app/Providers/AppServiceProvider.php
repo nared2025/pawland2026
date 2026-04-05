@@ -20,6 +20,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        URL::forceScheme('https'); //เวลาทดสอบให้ปิดส่วนนี้
+        // URL::forceScheme('https'); 
+        //เวลาทดสอบให้ปิดส่วนนี้
     }
 }
